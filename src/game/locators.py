@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from selenium.webdriver.common.by import By
 
 
-@dataclass(frozen=True)
 class InventoryDataLocators:
     name = 'inventory'
     names = ['cups', 'coffee', 'milk', 'sugar']
@@ -15,6 +14,13 @@ class InventoryDataLocators:
     for idx, name in enumerate(names):
         map[name] = ('xpath', f'/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')
         exec(f"{name} = ('xpath', '/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')")
+
+    time = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[2]')
+
+
+@dataclass(frozen=True)
+class RecipeDataLocators:
+    coffee = (By.XPATH, '//*[@id="slider-recipe-coffee-value"]')
 
 
 @dataclass(frozen=True)
@@ -31,6 +37,14 @@ class ButtonLocators:
         }
         for row in range(1, 5)
     }
+
+    recipe_map = {
+        InventoryDataLocators.names[row - 1]: (
+            By.XPATH, f'/html/body/div[2]/section[3]/div[3]/div[1]/div[2]/div/div/div[{row}]/p[1]/button')
+        for row in range(2, 5)
+    }
+
+    continue_button = (By.XPATH, '/html/body/div[2]/section[4]/button')
 
 #
 # '/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[1]/p[2]/button'
