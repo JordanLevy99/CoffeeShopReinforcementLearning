@@ -29,7 +29,6 @@ class ButtonLocators:
     skip_tutorial = (By.XPATH, "/html/body/div[2]/section[5]/div/p/button[1]")
     next = (By.XPATH, "/html/body/div[2]/section[5]/div/p/button[3]")
     start_day = (By.XPATH, "/html/body/div[2]/section[3]/div[3]/button")
-
     buy_map = {
         InventoryDataLocators.names[row - 1]: {(idx - 2): (
             By.XPATH, f'/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{row}]/p[{idx}]/button')
@@ -44,7 +43,10 @@ class ButtonLocators:
         for row in range(2, 5)
     }
 
+    price = (By.XPATH, '/html/body/div[2]/section[3]/div[3]/div[1]/div[3]/p/button')
+
     continue_button = (By.XPATH, '/html/body/div[2]/section[4]/button')
+    return_to_game = (By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/span[2]/a')
 
 #
 # '/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[1]/p[2]/button'

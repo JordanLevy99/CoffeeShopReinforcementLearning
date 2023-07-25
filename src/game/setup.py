@@ -28,8 +28,11 @@ class GameSetup(GameUtil):
 
     def __load_game(self):
         self.driver.install_addon('ublock_origin-1.50.0.xpi', temporary=True)
-        self.driver.get("https://www.coolmathgames.com/0-coffee-shop")
-        self.__switch_to_game_frame()
+        print('Ad-block installed...')
+        # self.driver.get("https://www.coolmathgames.com/0-coffee-shop")
+        self.driver.get("https://www.coolmathgames.com/sites/default/files/public_games/48838/")
+        print('Page loaded...')
+        # self.__switch_to_game_frame()
 
     def __switch_to_game_frame(self):
         game_locator = (By.ID, "html5game")
