@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from selenium.webdriver.common.by import By
 
 
+@dataclass(frozen=True)
 class InventoryDataLocators:
     name = 'inventory'
     names = ['cups', 'coffee', 'milk', 'sugar']
@@ -21,6 +22,21 @@ class InventoryDataLocators:
 @dataclass(frozen=True)
 class RecipeDataLocators:
     coffee = (By.XPATH, '//*[@id="slider-recipe-coffee-value"]')
+
+
+@dataclass(frozen=True)
+class MetadataLocators:
+    highscore = (By.XPATH, '/html/body/div[2]/section[1]/ul/li[3]/b')
+    balance = (By.XPATH, '/html/body/div[2]/section[3]/p[1]')
+    day = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[1]')
+    time = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[2]')
+    # temperature = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[3]')
+    # temperature_description = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[4]')
+    reputation = (By.XPATH, '/html/body/div[2]/section[3]/p[2]/span')
+    weather_map = {
+        'temperature': (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[3]'),
+        'temperature_description': (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[4]')
+    }
 
 
 @dataclass(frozen=True)

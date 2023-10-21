@@ -1,4 +1,5 @@
 import time
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Dict, List, Tuple
 from selenium import webdriver
@@ -6,13 +7,21 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 
-from src.game.locators import InventoryDataLocators, ButtonLocators, RecipeDataLocators
+from src.game.locators import InventoryDataLocators, ButtonLocators, RecipeDataLocators, MetadataLocators
+from src.game.types import NUM_DAYS
 from src.game.util import GameUtil
 
 
-class DataNames(Enum):
-    inventory = auto()
-    recipe = auto()
+@dataclass(frozen=True)
+class DataNames:
+    inventory = 'inventory'
+    recipe = 'recipe'
+    price = 'price'
+    weather = 'weather'
+    reputation = 'reputation'
+    cash = 'cash'
+
+    columns = ['inventory', 'recipe', 'price', 'weather', 'reputation', 'cash']
 
 
 class Game(GameUtil):
@@ -22,17 +31,17 @@ class Game(GameUtil):
         self.driver = driver
         self.game_screen = self.driver.find_element(value="screen-game")
 
-        self.game_data: Dict[str, Dict[str, float]] = {}
-        self.__initialize_game_data()
+        # self.game_data: Dict[str, Dict[str, float]] = {}
+        # self.__initialize_game_data()
+        self.day = 0
         self.__initialize_scale()
 
-
     def load_data(self):
+        self.__expand_recipe()
+        data_loader = _DataLoader(self.driver)
+        data_loader.load_data(self.day)
         # TODO: expand to include weather info, other metadata (reputation, etc.)
-        for name, locator in InventoryDataLocators.map.items():
-            value = self.get_text(locator)
-            self.game_data[DataNames.inventory.name][name] = float(value)
-        print(f'Loaded in the following data: {self.game_data}...')
+        print(f'Loaded in the following data: {data_loader.game_data}...')
 
     def buy_items(self, purchases: List[Tuple[str, int]]):
         self.__expand_inventory()
@@ -67,7 +76,8 @@ class Game(GameUtil):
         price_min_max = (0.05, 10)
         self.adjust_slider(price, ButtonLocators.price, price_min_max)
 
-    def start_day(self):
+    def start_day(self, day):
+        self.day = day
         self.click_button(ButtonLocators.start_day, 'start day')
         locator = InventoryDataLocators.time
         time_str = self.driver.find_element(locator[0], locator[1]).text
@@ -108,3 +118,51 @@ class Game(GameUtil):
         style = game.get_attribute('style')
         self.scale = float(style.split('(')[-1].strip(');'))
         print(f'Scale initialized as {self.scale}...')
+
+
+class _DataLoader(GameUtil):
+    """
+    Loads all relevant metadata (inventory, weather, reputation, cash)
+    """
+
+    def __init__(self, driver: WebDriver, day=1):
+        self.driver = driver
+        super().__init__(driver)
+        self.__initialize_game_data()
+
+    def load_data(self, day):
+
+        self.__load_inventory_data(day)
+        self.__load_recipe_data(day)
+        self.__load_weather_data(day)
+        # self.__load_reputation_data()
+        # self.__load_cash_data()
+        # self.__load_day()
+
+    def __initialize_game_data(self):
+        self.game_data = {
+            name: {
+                day: {}
+                for day in range(NUM_DAYS)
+            }
+            for name in DataNames.columns
+        }
+
+    # TODO: refactor the below three functions (and any other load functions) into a unified class structure
+    def __load_inventory_data(self, day):
+        for name, locator in InventoryDataLocators.map.items():
+            value = self.get_text(locator)
+            self.game_data[DataNames.inventory][day][name] = float(value)
+
+    def __load_recipe_data(self, day):
+        for name, locator in ButtonLocators.recipe_map.items():
+            value = self.get_text(locator)
+            self.game_data[DataNames.recipe][day][name] = float(value)
+
+    def __load_weather_data(self, day):
+        for name, locator in MetadataLocators.weather_map.items():
+            value = self.get_text(locator)
+            try:
+                self.game_data[DataNames.weather][day][name] = int(value.strip('°'))
+            except ValueError:
+                self.game_data[DataNames.weather][day][name] = value
