@@ -1,2 +1,4 @@
 selenium
 urllib3==1.26.16
+pandas
+torch

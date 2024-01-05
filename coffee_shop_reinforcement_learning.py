@@ -1,4 +1,6 @@
-from cli.main import setup_game
+from cli.main import run
+from cli.args import parse_args
 
 if __name__ == "__main__":
-    setup_game()
+    args = parse_args()
+    run(args)

@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from selenium.webdriver.common.by import By
 
 
+# TODO: change all locators to find by CSS selector instead of xpath, xpath is too rigid
+
+
 @dataclass(frozen=True)
 class InventoryDataLocators:
     name = 'inventory'
@@ -13,10 +16,10 @@ class InventoryDataLocators:
     sugar = ('', '')
     map = {}
     for idx, name in enumerate(names):
-        map[name] = ('xpath', f'/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')
-        exec(f"{name} = ('xpath', '/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')")
+        map[name] = ('xpath', f'/html/body/div/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')
+        exec(f"{name} = ('xpath', '/html/body/div/section[3]/div[3]/div[1]/div[1]/div/div[{idx + 1}]/p[1]/b')")
 
-    time = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[2]')
+    time = (By.XPATH, '/html/body/div/section[3]/div[1]/p/span[2]')
 
 
 @dataclass(frozen=True)
@@ -26,28 +29,29 @@ class RecipeDataLocators:
 
 @dataclass(frozen=True)
 class MetadataLocators:
-    highscore = (By.XPATH, '/html/body/div[2]/section[1]/ul/li[3]/b')
-    balance = (By.XPATH, '/html/body/div[2]/section[3]/p[1]')
-    day = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[1]')
-    time = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[2]')
+    highscore = (By.XPATH, '/html/body/div/section[1]/ul/li[3]/b')
+    balance = (By.XPATH, '/html/body/div/section[3]/p[1]')
+    day = (By.XPATH, '/html/body/div/section[3]/div[1]/p/span[1]')
+    time = (By.XPATH, '/html/body/div/section[3]/div[1]/p/span[2]')
     # temperature = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[3]')
     # temperature_description = (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[4]')
-    reputation = (By.XPATH, '/html/body/div[2]/section[3]/p[2]/span')
+    reputation = (By.XPATH, '/html/body/div/section[3]/p[2]/span')
     weather_map = {
-        'temperature': (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[3]'),
-        'temperature_description': (By.XPATH, '/html/body/div[2]/section[3]/div[1]/p/span[4]')
+        'temperature': (By.XPATH, '/html/body/div/section[3]/div[1]/p/span[3]'),
+        'temperature_description': (By.XPATH, '/html/body/div/section[3]/div[1]/p/span[4]')
     }
 
 
 @dataclass(frozen=True)
 class ButtonLocators:
-    play = (By.XPATH, "/html/body/div[2]/section[1]/ul/li[1]/button")
-    skip_tutorial = (By.XPATH, "/html/body/div[2]/section[5]/div/p/button[1]")
-    next = (By.XPATH, "/html/body/div[2]/section[5]/div/p/button[3]")
-    start_day = (By.XPATH, "/html/body/div[2]/section[3]/div[3]/button")
+    play = (By.XPATH, "/html/body/div/section[1]/ul/li[1]/button")
+    skip_tutorial = (By.XPATH, "/html/body/div/section[5]/div/p/button[1]")
+    next = (By.XPATH, "/html/body/div/section[5]/div/p/button[3]")
+    start_day = (By.XPATH, "/html/body/div/section[3]/div[3]/button")
+    skip_day = (By.XPATH, "/html/body/div/section[3]/button")
     buy_map = {
         InventoryDataLocators.names[row - 1]: {(idx - 2): (
-            By.XPATH, f'/html/body/div[2]/section[3]/div[3]/div[1]/div[1]/div/div[{row}]/p[{idx}]/button')
+            By.XPATH, f'/html/body/div/section[3]/div[3]/div[1]/div[1]/div/div[{row}]/p[{idx}]/button')
             for idx in range(2, 5)
         }
         for row in range(1, 5)
@@ -55,13 +59,13 @@ class ButtonLocators:
 
     recipe_map = {
         InventoryDataLocators.names[row - 1]: (
-            By.XPATH, f'/html/body/div[2]/section[3]/div[3]/div[1]/div[2]/div/div/div[{row}]/p[1]/button')
+            By.XPATH, f'/html/body/div/section[3]/div[3]/div[1]/div[2]/div/div/div[{row}]/p[1]/button')
         for row in range(2, 5)
     }
 
-    price = (By.XPATH, '/html/body/div[2]/section[3]/div[3]/div[1]/div[3]/p/button')
+    price = (By.XPATH, '/html/body/div/section[3]/div[3]/div[1]/div[3]/p/button')
 
-    continue_button = (By.XPATH, '/html/body/div[2]/section[4]/button')
+    continue_button = (By.XPATH, '/html/body/div/section[4]/button')
     return_to_game = (By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/span[2]/a')
 
 #

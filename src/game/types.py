@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 NUM_DAYS = 14
 
+
 @dataclass
 class DailyData:
     balance: float
